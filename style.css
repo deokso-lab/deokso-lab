@@ -70,7 +70,8 @@ button {
   opacity: 0;
   transform: translateY(20px);
   animation: fadeUp 0.4s ease forwards;
-
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
   break-inside: avoid;
 
 }
