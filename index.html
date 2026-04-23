@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Deokso-Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+</head>
+
+<body>
+<button id="adminBtn" onclick="openModal()">관리자</button>
+<img src="deokso.png" alt="덕소고사진" id="icon">
+<h1>덕소고등학교 생물화학실</h1>
+<p>실험도구 설명 및 사용법</p>
+
+<!-- 🔐 로그인 -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span onclick="closeModal()" class="close">&times;</span>
+    <h3>관리자 로그인</h3>
+    <input type="password" id="pw" placeholder="비밀번호 입력">
+    <button onclick="login()">로그인</button>
+  </div>
+</div>
+
+<!-- ✏️ 글쓰기 -->
+<div id="editor">
+  <h3>게시글 작성</h3>
+  <textarea id="content" placeholder="내용 입력"></textarea><br>
+  <input type="file" id="imageInput"><br>
+  <button onclick="addPost()">게시</button>
+</div>
+
+<hr>
+
+<!-- 📄 게시글 -->
+<div id="posts"></div>
+
+</body>
+</html>
