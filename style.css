@@ -38,9 +38,9 @@ button {
 /* 🔥 핵심: 게시글 가로 배치 (Grid) */
 #posts {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 기본 3열 */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  padding: 20px;
+  align-items: start; /* ⭐ 중요 */
 }
 
 /* 📱 태블릿 */
@@ -65,10 +65,20 @@ button {
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   text-align: left;
   position: relative;
-  width: 100%;
-  transition: transform 0.2s, box-shadow 0.2s;
+  width: 95%;
+
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.4s ease forwards;
+
+  break-inside: avoid;
+
 }
 
+.post.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 /* ✨ hover 효과 */
 .post:hover {
   transform: translateY(-5px);
@@ -80,6 +90,13 @@ button {
   width: 100%;
   border-radius: 10px;
   margin-top: 10px;
+
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.post img.show {
+  opacity: 1;
 }
 
 /* 삭제 버튼 */
@@ -87,7 +104,14 @@ button {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: red;
+  font-size: 15px;
+  background: rgb(252, 48, 48);
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+.deleteBtn:hover {
+  opacity: 1;
 }
 
 #icon {
@@ -157,4 +181,98 @@ button {
 .modal.show .modal-content {
   transform: translateY(0);
   opacity: 1;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post.removing {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+button {
+  transition: transform 0.1s ease, box-shadow 0.1s;
+}
+
+button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.post img {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+#editor {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+#editor.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-viewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.card-viewer.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.card-viewer-content {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+
+  width: 100%;
+  max-width: 900px;   /* ⭐ 가로 제한 */
+  max-height: 100vh;   /* ⭐ 세로 제한 */
+
+  overflow-y: auto;   /* ⭐ 넘치면 스크롤 */
+
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+.card-viewer-content img {
+  width: 100%;
+  max-height: 400px;   /* ⭐ 이미지 제한 */
+  object-fit: contain;
+}
+.card-viewer.show .card-viewer-content {
+  transform: scale(1);
 }
