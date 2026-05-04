@@ -1,30 +1,90 @@
 let isAdmin = false;
 
-// ✅ 페이지 로드 시 실행
 window.onload = function() {
+  setupAdminButtonFade();
+  setupFileNamePreview();
+  setupSearch();
   showPosts();
 
-  // 항상 숨기고 시작
   document.getElementById("editor").style.display = "none";
 };
 
-// ✅ 로그인
+function setupAdminButtonFade() {
+  const adminBtn = document.getElementById("adminBtn");
+  const line = document.querySelector("hr");
+
+  function updateAdminButton() {
+    if (line.getBoundingClientRect().top <= 0) {
+      adminBtn.classList.add("hidden");
+    } else {
+      adminBtn.classList.remove("hidden");
+    }
+  }
+
+  updateAdminButton();
+  window.addEventListener("scroll", updateAdminButton);
+  window.addEventListener("resize", updateAdminButton);
+}
+
+function setupFileNamePreview() {
+  const imageInput = document.getElementById("imageInput");
+  const fileName = document.getElementById("fileName");
+  const imagePreview = document.getElementById("imagePreview");
+
+  imageInput.addEventListener("change", function() {
+    const file = imageInput.files[0];
+    fileName.textContent = file ? file.name : "선택된 파일 없음";
+    imagePreview.innerHTML = "";
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.alt = "Selected image preview";
+      imagePreview.appendChild(img);
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+function setupSearch() {
+  document.getElementById("searchInput").addEventListener("input", showPosts);
+}
+
+function getPosts() {
+  return JSON.parse(localStorage.getItem("posts") || "[]");
+}
+
+function savePosts(posts) {
+  localStorage.setItem("posts", JSON.stringify(posts));
+}
+
+function resetEditor() {
+  document.getElementById("content").value = "";
+  document.getElementById("imageInput").value = "";
+  document.getElementById("fileName").textContent = "선택된 파일 없음";
+  document.getElementById("imagePreview").innerHTML = "";
+}
+
 function login() {
-  if (document.getElementById("pw").value === "1234") {
+  if (document.getElementById("pw").value === "admin") {
     isAdmin = true;
 
     const editor = document.getElementById("editor");
     editor.style.display = "block";
-    editor.classList.add("active"); // ⭐ 여기 추가
+    editor.classList.add("active");
 
     closeModal();
     showPosts();
   } else {
-    alert("비밀번호 틀림");
+    alert("비밀번호가 틀렸습니다");
   }
 }
 
-// ✅ 로그아웃
 function logout() {
   isAdmin = false;
 
@@ -32,10 +92,9 @@ function logout() {
   showPosts();
 }
 
-// ✅ 게시글 추가 (관리자만 가능)
 function addPost() {
   if (!isAdmin) {
-    alert("관리자만 작성 가능");
+    alert("관리자만 게시물을 작성할 수 있습니다");
     return;
   }
 
@@ -47,16 +106,16 @@ function addPost() {
   const reader = new FileReader();
 
   reader.onload = function(e) {
-    const imgData = e.target.result;
+    const posts = getPosts();
 
-    let posts = JSON.parse(localStorage.getItem("posts") || "[]");
-    posts.push({ text: text, image: imgData });
+    posts.push({
+      text: text,
+      image: e.target.result,
+      createdAt: Date.now()
+    });
 
-    localStorage.setItem("posts", JSON.stringify(posts));
-
-    document.getElementById("content").value = "";
-    document.getElementById("imageInput").value = "";
-
+    savePosts(posts);
+    resetEditor();
     showPosts();
   };
 
@@ -67,79 +126,127 @@ function addPost() {
   }
 }
 
-// ✅ 게시글 표시
 function showPosts() {
-  const posts = JSON.parse(localStorage.getItem("posts") || "[]");
+  const posts = getPosts();
   const container = document.getElementById("posts");
+  const searchText = document.getElementById("searchInput").value.trim().toLowerCase();
+
   container.innerHTML = "";
 
-  posts.forEach((p, index) => {
+  const visiblePosts = posts
+    .map((post, index) => ({ post, index }))
+    .reverse()
+    .filter(({ post }) => (post.text || "").toLowerCase().includes(searchText));
+
+  if (visiblePosts.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.textContent = posts.length === 0 ? "게시물이 없습니다" : "일치하는 게시물이 없습니다";
+    container.appendChild(empty);
+    return;
+  }
+
+  visiblePosts.forEach(({ post, index }) => {
     const div = document.createElement("div");
     div.className = "post";
-    div.onclick = () => openCardViewer(div);
+    div.onclick = () => openCardViewer(post);
 
-    div.innerHTML = `
-    ${isAdmin ? `<button class="deleteBtn" onclick="event.stopPropagation(); deletePost(${index})">X</button>` : ""}
-    <p>${p.text}</p>
-    ${p.image ? `<img src="${p.image}">` : ""}
-    `;
+    if (isAdmin) {
+      div.appendChild(createDeleteButton(index));
+    }
+
+    const text = document.createElement("p");
+    text.textContent = post.text || "";
+    div.appendChild(text);
+
+    if (post.image) {
+      const img = document.createElement("img");
+      img.src = post.image;
+      img.alt = "Post image";
+      div.appendChild(img);
+    }
 
     container.appendChild(div);
 
-    // ⭐ 애니메이션 트리거
     setTimeout(() => {
       div.classList.add("show");
     }, 10);
   });
 }
 
-// ✅ 게시글 삭제 (관리자만 가능)
-function deletePost(index) {
+function createDeleteButton(index) {
+  const button = document.createElement("button");
+  button.className = "deleteBtn";
+  button.setAttribute("aria-label", "Delete post");
+  button.onclick = function(event) {
+    event.stopPropagation();
+    deletePost(index, button);
+  };
+
+  button.innerHTML = `
+    <svg viewBox="0 0 24 28" aria-hidden="true">
+      <path d="M3 7h18"></path>
+      <path d="M8 7V4h8v3"></path>
+      <path d="M6 10l1 15h10l1-15"></path>
+      <path d="M10 13v8"></path>
+      <path d="M14 13v8"></path>
+    </svg>
+  `;
+
+  return button;
+}
+
+function deletePost(index, button) {
   if (!isAdmin) {
-    alert("관리자만 삭제 가능");
+    alert("Only admin can delete posts");
     return;
   }
 
-  const container = document.getElementById("posts");
-  const postEl = container.children[index];
-
-  // 애니메이션 먼저 실행
+  const postEl = button.closest(".post");
   postEl.classList.add("removing");
 
   setTimeout(() => {
-    let posts = JSON.parse(localStorage.getItem("posts") || "[]");
+    const posts = getPosts();
     posts.splice(index, 1);
-    localStorage.setItem("posts", JSON.stringify(posts));
+    savePosts(posts);
     showPosts();
   }, 300);
 }
 
-// ✅ 모달 열기
 function openModal() {
   document.getElementById("loginModal").classList.add("show");
 }
 
-// ✅ 모달 닫기
 function closeModal() {
   document.getElementById("loginModal").classList.remove("show");
 }
 
-function openCardViewer(element) {
+function openCardViewer(post) {
   const viewer = document.getElementById("cardViewer");
   const content = document.querySelector(".card-viewer-content");
 
-  content.innerHTML = element.innerHTML; // 카드 내용 복사
+  content.innerHTML = "";
+
+  const closeButton = document.createElement("button");
+  closeButton.className = "viewer-close";
+  closeButton.textContent = "Close";
+  closeButton.onclick = closeCardViewer;
+  content.appendChild(closeButton);
+
+  if (post.image) {
+    const img = document.createElement("img");
+    img.src = post.image;
+    img.alt = "Expanded post image";
+    content.appendChild(img);
+  }
+
+  const text = document.createElement("p");
+  text.textContent = post.text || "";
+  content.appendChild(text);
+
   viewer.classList.add("show");
 }
 
 function closeCardViewer() {
   document.getElementById("cardViewer").classList.remove("show");
 }
-
-setTimeout(() => {
-  div.classList.add("show");
-
-  const img = div.querySelector("img");
-  if (img) img.classList.add("show");
-
-}, 10);
