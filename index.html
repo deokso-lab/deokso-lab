@@ -9,11 +9,15 @@
 </head>
 
 <body>
-<button id="adminBtn" onclick="openModal()">관리자</button>
+<div id="adminControls">
+  <button id="adminBtn" onclick="openModal()">관리자</button>
+  <button id="logoutBtn" onclick="logout()">로그아웃</button>
+</div>
 <a href="https://deokso-h.goegn.kr/deokso-h/main.do" target="_blank" rel="noopener noreferrer">
   <img src="deokso.png" alt="덕소고사진" id="icon">
 </a>
 <h1>덕소고등학교 생물화학실</h1>
+<div id="adminStatus" class="admin-status">관리자 상태: 로그아웃</div>
 <p>실험도구 설명 및 사용법</p>
 
 
