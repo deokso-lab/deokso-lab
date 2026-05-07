@@ -153,8 +153,8 @@ button:active,
 /* 🔥 핵심: 게시글 가로 배치 (Grid) */
 #posts {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 24px;
   align-items: start; /* ⭐ 중요 */
 }
 
@@ -175,10 +175,10 @@ button:active,
 /* 📦 게시글 카드 */
 .post {
   background: white;
-  padding-left: 28px;
-  padding-right: 28px;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-left: 36px;
+  padding-right: 36px;
+  padding-top: 24px;
+  padding-bottom: 24px;
   box-sizing: border-box;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -213,6 +213,12 @@ button:active,
 
   opacity: 0;
   transition: opacity 0.5s ease;
+}
+
+.post p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 0 12px 0;
 }
 
 .post img.show {
