@@ -11,6 +11,13 @@ h1 {
   margin-bottom: 10px;
 }
 
+.admin-status {
+  margin-bottom: 18px;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
 /* 입력창 */
 input, textarea {
   font-family: inherit;
@@ -247,20 +254,23 @@ button:active,
     height: 100px;
 }
 
-/* 관리자 버튼 */
-#adminBtn {
+#adminControls {
   position: fixed;
   top: 20px;
   right: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 30;
+}
+
+#adminBtn,
+#logoutBtn {
   background: #333;
 }
 
-/* 관리자 버튼 */
-#adminBtn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #333;
+#logoutBtn {
+  display: none;
+  background: #d64545;
 }
 
 /* 닫기 버튼 */
