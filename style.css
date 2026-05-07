@@ -1,0 +1,463 @@
+/* 전체 배경 */
+body {
+  font-family: Arial;
+  background: #f5f6fa;
+  padding: 20px;
+  text-align: center;
+}
+
+/* 제목 */
+h1 {
+  margin-bottom: 10px;
+}
+
+.admin-status {
+  margin-bottom: 18px;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* 입력창 */
+input, textarea {
+  font-family: inherit;
+  padding: 8px;
+  margin: 5px;
+  width: 250px;
+}
+
+textarea {
+  resize: none;
+  scrollbar-width: thin;
+  scrollbar-color: #b8beca #f0f2f6;
+}
+
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #f0f2f6;
+  border-radius: 8px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #b8beca;
+  border-radius: 8px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #9299a8;
+}
+
+/* 버튼 */
+button,
+.fileBtn {
+  padding: 8px 12px;
+  margin: 5px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: normal;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
+}
+
+button {
+  background: #4CAF50;
+}
+
+#imageInput {
+  display: none;
+}
+
+.fileBtn {
+  display: inline-block;
+  background: #333;
+}
+
+.fileBtn:hover {
+  background: #555;
+}
+
+button:active,
+.fileBtn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#fileName {
+  display: inline-block;
+  max-width: 180px;
+  color: #666;
+  font-size: 14px;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.image-preview {
+  min-height: 0;
+  margin: 8px auto 4px;
+  max-width: 260px;
+}
+
+.image-preview img {
+  display: block;
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #eef1f6;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.search-input {
+  width: min(420px, 90%);
+  box-sizing: border-box;
+  margin: 12px auto 24px;
+  padding: 11px 14px;
+  border: 1px solid #d8dde6;
+  border-radius: 8px;
+  background: white;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: #8da2c0;
+  box-shadow: 0 0 0 3px rgba(141,162,192,0.2);
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 34px 20px;
+  color: #667085;
+  background: white;
+  border: 1px dashed #cfd6e3;
+  border-radius: 10px;
+  text-align: center;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* 글쓰기 영역 */
+#editor {
+  display: none;
+  margin-top: 20px;
+}
+
+/* 🔥 핵심: 게시글 가로 배치 (Grid) */
+#posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  align-items: start; /* ⭐ 중요 */
+}
+
+/* 📱 태블릿 */
+@media (max-width: 900px) {
+  #posts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 📱 모바일 */
+@media (max-width: 600px) {
+  #posts {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 📦 게시글 카드 */
+.post {
+  background: white;
+  padding-left: 28px;
+  padding-right: 28px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  box-sizing: border-box;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: left;
+  position: relative;
+  width: 95%;
+
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.6s ease forwards;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  break-inside: avoid;
+
+}
+
+.post.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* ✨ hover 효과 */
+.post:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* 이미지 */
+.post img {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
+
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.post img.show {
+  opacity: 1;
+}
+
+/* 삭제 버튼 */
+.deleteBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(252, 48, 48);
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+.deleteBtn svg {
+  width: 20px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.deleteBtn:hover {
+  opacity: 1;
+}
+
+#icon {
+    width: 100px;
+    height: 100px;
+}
+
+#adminControls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 30;
+}
+
+#adminBtn,
+#logoutBtn {
+  background: #333;
+}
+
+#logoutBtn {
+  display: none;
+  background: #d64545;
+}
+
+/* 닫기 버튼 */
+.close {
+  float: right;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/* 모달 배경 (fade 효과) */
+.modal {
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+
+/* 모달 열릴 때 */
+.modal.show {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+}
+
+/* 모달 내용 애니메이션 */
+.modal-content {
+  background: white;
+  margin: 15% auto;
+  padding: 20px;
+  width: 300px;
+  border-radius: 10px;
+  text-align: center;
+
+  transform: translateY(-30px) scale(0.95);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 열릴 때 */
+.modal.show .modal-content {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post.removing {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.post img {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+#editor {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+#editor.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-viewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.card-viewer.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.card-viewer-content {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+
+  width: 100%;
+  max-width: 900px;   /* ⭐ 가로 제한 */
+  max-height: 100vh;   /* ⭐ 세로 제한 */
+
+  overflow-y: auto;   /* ⭐ 넘치면 스크롤 */
+
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+.card-viewer-content img {
+  width: 100%;
+  max-height: 400px;   /* ⭐ 이미지 제한 */
+  object-fit: contain;
+}
+.card-viewer.show .card-viewer-content {
+  transform: scale(1);
+}
+
+#adminBtn {
+  z-index: 10;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.8s ease;
+}
+
+#adminBtn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.card-viewer {
+  background: rgba(0,0,0,0.72);
+}
+
+.card-viewer-content {
+  width: min(900px, 92%);
+  max-height: 90vh;
+  box-sizing: border-box;
+  padding: 24px;
+  position: relative;
+  text-align: left;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.28);
+  transform: translateY(18px) scale(0.96);
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.card-viewer-content img {
+  max-height: 520px;
+  border-radius: 10px;
+  background: #f0f2f6;
+  margin-bottom: 18px;
+}
+
+.card-viewer-content p {
+  margin: 0;
+  line-height: 1.6;
+  color: #333;
+}
+
+.card-viewer.show .card-viewer-content {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.viewer-close {
+  float: right;
+  margin: 0 0 14px 14px;
+  background: #333;
+}
