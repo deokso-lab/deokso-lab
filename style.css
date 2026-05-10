@@ -73,6 +73,10 @@ button {
   display: none;
 }
 
+#backupInput {
+  display: none;
+}
+
 .fileBtn {
   display: inline-block;
   background: #333;
@@ -114,6 +118,17 @@ button:active,
   background: #eef1f6;
   box-shadow: 0 3px 10px rgba(0,0,0,0.08);
   animation: fadeIn 0.3s ease forwards;
+}
+
+.backup-tools {
+  margin: 14px auto 0;
+  padding-top: 12px;
+  max-width: 360px;
+  border-top: 1px solid #d8dde6;
+}
+
+.backup-tools button {
+  background: #2f6fed;
 }
 
 .search-input {

@@ -1,8 +1,10 @@
 let isAdmin = false;
+let adminPassword = "";
 
 window.onload = function() {
   setupAdminButtonFade();
   setupFileNamePreview();
+  setupBackupImport();
   setupSearch();
   updateAdminUI();
   showPosts();
@@ -83,12 +85,32 @@ async function getPosts() {
 async function savePost(post) {
   const response = await fetch("/posts", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-password": adminPassword
+    },
     body: JSON.stringify(post)
   });
 
   if (!response.ok) {
     throw new Error("Failed to save post to server.");
+  }
+
+  return response.json();
+}
+
+async function importPosts(posts) {
+  const response = await fetch("/posts/import", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-password": adminPassword
+    },
+    body: JSON.stringify({ posts })
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to import posts.");
   }
 
   return response.json();
@@ -101,9 +123,94 @@ function resetEditor() {
   document.getElementById("imagePreview").innerHTML = "";
 }
 
-function login() {
-  if (document.getElementById("pw").value === "admin") {
+function setupBackupImport() {
+  const backupInput = document.getElementById("backupInput");
+
+  backupInput.addEventListener("change", function() {
+    const file = backupInput.files[0];
+    if (!file) return;
+
+    restorePostsFromBackup(file).finally(() => {
+      backupInput.value = "";
+    });
+  });
+}
+
+async function exportPosts() {
+  if (!isAdmin) {
+    alert("관리자만 백업을 다운로드할 수 있습니다");
+    return;
+  }
+
+  try {
+    const posts = await getPosts();
+    const backup = {
+      exportedAt: new Date().toISOString(),
+      posts
+    };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], {
+      type: "application/json"
+    });
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+    link.download = `deokso-lab-posts-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(link.href);
+  } catch (error) {
+    alert("백업 다운로드에 실패했습니다.");
+    console.error(error);
+  }
+}
+
+async function restorePostsFromBackup(file) {
+  if (!isAdmin) {
+    alert("관리자만 백업을 복원할 수 있습니다");
+    return;
+  }
+
+  try {
+    const text = await file.text();
+    const backup = JSON.parse(text);
+    const posts = Array.isArray(backup) ? backup : backup.posts;
+
+    if (!Array.isArray(posts)) {
+      alert("올바른 백업 파일이 아닙니다.");
+      return;
+    }
+
+    const confirmed = confirm(
+      `현재 게시글이 백업 파일의 게시글 ${posts.length}개로 교체됩니다. 계속할까요?`
+    );
+
+    if (!confirmed) return;
+
+    const result = await importPosts(posts);
+    alert(`백업 복원이 완료되었습니다. 게시글 ${result.count}개를 불러왔습니다.`);
+    showPosts();
+  } catch (error) {
+    alert("백업 복원에 실패했습니다. JSON 파일을 확인해 주세요.");
+    console.error(error);
+  }
+}
+
+async function login() {
+  const password = document.getElementById("pw").value;
+
+  try {
+    const response = await fetch("/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password })
+    });
+
+    if (!response.ok) {
+      throw new Error("Invalid password.");
+    }
     isAdmin = true;
+    adminPassword = password;
 
     const editor = document.getElementById("editor");
     editor.style.display = "block";
@@ -112,13 +219,14 @@ function login() {
     closeModal();
     updateAdminUI();
     showPosts();
-  } else {
+  } catch (error) {
     alert("비밀번호가 틀렸습니다");
   }
 }
 
 function logout() {
   isAdmin = false;
+  adminPassword = "";
 
   document.getElementById("editor").style.display = "none";
   updateAdminUI();
@@ -247,7 +355,10 @@ async function deletePost(postId, button) {
 
   setTimeout(async () => {
     try {
-      const response = await fetch(`/posts/${postId}`, { method: "DELETE" });
+      const response = await fetch(`/posts/${postId}`, {
+        method: "DELETE",
+        headers: { "x-admin-password": adminPassword }
+      });
       if (!response.ok) {
         throw new Error("Failed to delete post.");
       }

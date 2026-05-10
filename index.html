@@ -39,6 +39,11 @@
   <span id="fileName">선택된 파일 없음</span>
   <div id="imagePreview" class="image-preview"></div>
   <button onclick="addPost()">게시</button>
+  <div id="backupTools" class="backup-tools">
+    <button type="button" onclick="exportPosts()">백업 다운로드</button>
+    <label for="backupInput" class="fileBtn">백업 복원</label>
+    <input type="file" id="backupInput" accept="application/json,.json">
+  </div>
 </div>
 
 <hr>
