@@ -1,0 +1,150 @@
+[
+  {
+    "name": "비커",
+    "category": "실험기구",
+    "location": "케비넷 2",
+    "description": "액체를 담거나 혼합할 때 사용하는 기본 실험기구입니다.",
+    "quantity": 24
+  },
+  {
+    "name": "삼각플라스크",
+    "category": "실험기구",
+    "location": "케비넷 2",
+    "description": "용액을 흔들어 섞거나 가열할 때 사용하는 플라스크입니다.",
+    "quantity": 12
+  },
+  {
+    "name": "메스실린더",
+    "category": "실험기구",
+    "location": "케비넷 1",
+    "description": "액체의 부피를 비교적 정확하게 측정하는 기구입니다.",
+    "quantity": 8
+  },
+  {
+    "name": "시험관",
+    "category": "실험기구",
+    "location": "케비넷 2",
+    "description": "소량의 시료를 담거나 반응을 관찰하는 데 사용합니다.",
+    "quantity": 50
+  },
+  {
+    "name": "시험관대",
+    "category": "실험기구",
+    "location": "케비넷 2",
+    "description": "시험관을 세워 보관하는 받침대입니다.",
+    "quantity": 10
+  },
+  {
+    "name": "피펫",
+    "category": "실험기구",
+    "location": "케비넷 1",
+    "description": "일정량의 액체를 정확하게 옮길 때 사용합니다.",
+    "quantity": 15
+  },
+  {
+    "name": "스포이드",
+    "category": "실험기구",
+    "location": "케비넷 1",
+    "description": "소량의 액체를 한 방울씩 떨어뜨릴 때 사용합니다.",
+    "quantity": 20
+  },
+  {
+    "name": "깔때기",
+    "category": "실험기구",
+    "location": "케비넷 3",
+    "description": "액체를 옮기거나 여과할 때 사용하는 기구입니다.",
+    "quantity": 6
+  },
+  {
+    "name": "유리막대",
+    "category": "실험기구",
+    "location": "케비넷 3",
+    "description": "용액을 저을 때 사용하는 유리 막대입니다.",
+    "quantity": 12
+  },
+  {
+    "name": "전자저울",
+    "category": "측정기기",
+    "location": "실험대",
+    "description": "시료의 질량을 정밀하게 측정합니다.",
+    "quantity": 2
+  },
+  {
+    "name": "알코올램프",
+    "category": "실험기구",
+    "location": "케비넷 4",
+    "description": "실험 시 가열을 위해 사용하는 기구입니다.",
+    "quantity": 6
+  },
+  {
+    "name": "온도계",
+    "category": "측정기기",
+    "location": "케비넷 4",
+    "description": "용액이나 물체의 온도를 측정합니다.",
+    "quantity": 10
+  },
+  {
+    "name": "증류수",
+    "category": "시약",
+    "location": "시약 케비넷 1",
+    "description": "불순물이 제거된 물로, 다양한 실험에 사용됩니다.",
+    "quantity": 5,
+    "precautions": "오염되지 않도록 깨끗한 용기에만 사용하세요."
+  },
+  {
+    "name": "염산(HCl)",
+    "category": "시약",
+    "location": "시약 케비넷 1",
+    "description": "대표적인 강산으로 산·염기 실험에 사용됩니다.",
+    "quantity": 3,
+    "precautions": "보안경과 장갑을 착용하고 피부와 눈에 닿지 않도록 주의하세요."
+  },
+  {
+    "name": "수산화나트륨(NaOH)",
+    "category": "시약",
+    "location": "시약 케비넷 1",
+    "description": "대표적인 강염기로 중화 반응 실험에 사용됩니다.",
+    "quantity": 2,
+    "precautions": "피부에 닿지 않도록 주의하고 사용 후 손을 깨끗이 씻으세요."
+  },
+  {
+    "name": "황산구리",
+    "category": "시약",
+    "location": "시약 케비넷 2",
+    "description": "푸른색 결정으로 다양한 화학 실험에 사용됩니다.",
+    "quantity": 2,
+    "precautions": "먹거나 흡입하지 않도록 주의하고 사용 후 손을 씻으세요."
+  },
+  {
+    "name": "에탄올",
+    "category": "시약",
+    "location": "시약 케비넷 2",
+    "description": "소독 및 용매로 자주 사용되는 액체입니다.",
+    "quantity": 4,
+    "precautions": "인화성이 매우 높으므로 화기 근처에서 사용하지 마세요."
+  },
+  {
+    "name": "BTB 용액",
+    "category": "시약",
+    "location": "시약 케비넷 3",
+    "description": "산성과 염기성을 구분하는 지시약입니다.",
+    "quantity": 3,
+    "precautions": "눈이나 입에 들어가지 않도록 주의하세요."
+  },
+  {
+    "name": "페놀프탈레인 용액",
+    "category": "시약",
+    "location": "시약 케비넷 3",
+    "description": "염기성에서 분홍색으로 변하는 산·염기 지시약입니다.",
+    "quantity": 2,
+    "precautions": "직접 접촉을 피하고 사용 후 뚜껑을 꼭 닫아 보관하세요."
+  },
+  {
+    "name": "아이오딘 용액",
+    "category": "시약",
+    "location": "시약 케비넷 3",
+    "description": "녹말의 존재를 확인하는 데 사용하는 시약입니다.",
+    "quantity": 2,
+    "precautions": "의복에 묻으면 착색될 수 있으므로 주의하세요."
+  }
+]
